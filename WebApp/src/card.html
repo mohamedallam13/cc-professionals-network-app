@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_self">
+    
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <?!= sitePagesManager.include("index-css"); ?>
+  <body>
+     <div id="header"> <!--Open container-->
+       <div class="row">
+       <nav class="black">
+       <div class="nav-wrapper">
+       <a href="#" class="brand-logo center"><font size="6"><b>Professionals  </b></font><img class="center" alt="HTML5 Icon"  width="60" height="60" src="https://drive.google.com/uc?export=view&id=0BwlTg-w1Fd6UNEpRcUtmODBnMFU"><font size="6"><b> Network </b></font><font size="2">(beta)</font></a>
+       </div>
+       </nav>
+       </div>
+     </div> <!--Close container-->
+     
+     <div id="header"> <!--Open container-->
+       <div class="row">
+       <nav class="red">
+       <div class="nav-wrapper">
+       <a href="#" class="brand-logo center"><font size="6"><b>DEV MODE</b></font></a>
+       </div>
+       </nav>
+       </div>
+     </div> <!--Close container-->
+     
+     <div id="header"> <!--Open container-->
+       <div class="row">
+       <nav class="teal">
+       <div class="nav-wrapper">
+       <a href="https://forms.gle/GVpagEUhExszytoC6" target="_top" class="brand-logo center"><font size="2"><b>You're a Professional or you recommend one? CLICK HERE!</b></font></a>
+       </div>
+       </nav>
+       </div>
+     </div> <!--Close container-->
+     
+     <div id="main"> <!--Open container-->
+     
+     <div class="row" id="mainRow">
+     <div class="col s4" id="mainCol">
+     
+  <div class="card"><!--Open Column-->
+    <div class="card-image waves-effect waves-block waves-light">
+      <img alt="No Picture Available"  src="https://drive.google.com/uc?export=view&id={{ currentImageFileID }}">
+    </div>
+    {{ discountRibbon }}
+    <div class="card-content">
+      <span class="card-title activator grey-text text-darken-4">{{ fullName }}<i class="material-icons right">more_vert</i></span>
+      <p style="color:#33CEFF;">{{ title }} {{ clinicDisp }}</p><br>
+      <p><b>Location</b></p>
+      <p>{{ location }}</p>
+      <p><b>Topics</b></p>
+      <p>{{ trimmedTopics }}</p>
+      <p><b>Community Rating {{ ratingCount }}</b></p>
+      <p>  {{ ratingStars }}</p>
+    </div>
+    <div class="card-action">
+      <a href="https://script.google.com/macros/s/AKfycbxzRRqTYXsMFH8oVk4C2Syag-ULhQyq2PMZ20pJXve-e0fr4k7f/exec?v=application&name={{ fullName }}" onclick = "loadingFunction()">CONTACT NOW</a>
+      <a href="#" onclick = "moreInfo('{{ fullName }}')">MORE INFO</a>
+    </div>
+    <div class="card-reveal">
+      <span class="card-title grey-text text-darken-4">About<i class="material-icons right">close</i></span>
+      <p><b>Brief</b></p>
+      <p>{{ brief }}</p>
+      <p><b>Hour Rate</b></p>
+      <p>{{ rate }}</p>
+      <p><b>CC Discount</b></p>
+      <p>{{ discountRate }}</p>
+      <p><b>Offers Online Sessions?</b></p>
+      <p>{{ onlineSessionsPossible }}</p>
+      
+    </div>
+  </div>
+  
+     </div><!--Close Column-->
+     
+     
+     </div><!--Close Row-->
+     
+          <div class="row" >
+          
+           <a href="https://script.google.com/macros/s/AKfycbxDhJDIf1t36NcIu2pNpid3lrCe7Nf7xQgPWN0r7izM/dev?v=application&name=" onclick = "loadingFunction()">CONTACT NOW</a>
+          
+          </div><!--Close Row-->
+  
+     
+     
+          <div class="row" >
+          
+           <button  class="btn waves-effect waves-light" style= "width: 100%;" type="submit" name="action" onclick= "createCardTemplate()" >Add to Templates</button>
+          
+          </div><!--Close Row-->
+          
+     </div> <!--Close container-->
+     
+              <div id="overlay"><!--Open Loader-->
+      <div class="loader"></div>
+  </div><!--Close Loader-->
+  
+  </body>
+   <?!= sitePagesManager.include("card-js"); ?><!--the "!" to evalute or execute the html, not treat it as just string-->
+</html>

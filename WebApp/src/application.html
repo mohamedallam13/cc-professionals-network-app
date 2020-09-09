@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_self">
+    
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  </head>
+  <?!= sitePagesManager.include("application-css"); ?>
+  <body>
+       <div id="header"> <!--Open container-->
+       <div class="row">
+       <nav class="teal">
+       <div class="nav-wrapper">
+       <a href="https://forms.gle/GVpagEUhExszytoC6" class="brand-logo center"><font size="2"><b>JOIN US? CLICK HERE!</b></font></a>
+       </div>
+       </nav>
+       </div>
+     </div> <!--Close container-->
+     
+     <div id="header"> <!--Open container-->
+       <div class="row">
+       <nav class="black">
+       <div class="nav-wrapper">
+       <a href="#" class="brand-logo center"><font size="6"><b>Professionals Network </b></font><font size="2">(beta)</font></a>
+       </div>
+       </nav>
+       </div>
+     </div> <!--Close container-->
+     <div id="main"> <!--Open container Main-->
+       <div class="row" id="mainRow">
+          <div class="col s12 m8 offset-m2" id="mainCol">
+             <div class="card">
+               <div class="card-action grey">
+                 <h2 class="brand-logo center">CONTACT THEM NOW!</h2>
+               </div><!--Close class card header-->   
+               
+               <div class="card-content">
+               
+                 <div class="form-field">
+                 <p>I would like to Contact</p>
+                   <select id = "selectedProfessional" class="validate" required="">
+                    <option value="" disabled></option>     
+                   <? var selected = selectedProf; activeList.forEach(function(name){ ?>
+                   console.log(<? selectedProf ?>)
+                   console.log(<? name ?>)
+                   <?if(name.trim().toLowerCase() == selected.trim().toLowerCase()){ ?>
+                   <option value="<?= name ?>" selected><?= name ?></option>
+                   <? }else{?> 
+                   <option value="<?= name ?>"><?= name ?></option>
+                   
+                   <? }?>
+                   <?})?>
+                   </select>
+                 </div><br><br><!--Close form field-->
+                 
+                 <div class="form-field">
+                   <h5><b>Info</b></h5>
+                 </div><br><!--Close form field-->
+               
+                 <div class="form-field">
+                   <input id="requesterEmail" type="email" class="validate" required = "">
+                   <label for="name">Contact Email (Real or Fake)</label>
+                 </div><br><br><!--Close form field-->
+               
+                 <div class="form-field">
+                   <input id="age" type="number" class="validate" required = "">
+                   <label for="age">Age</label>
+                 </div><br><br><!--Close form field-->
+               
+                 <div class="form-field">
+                   <div class="radioRequired" id= "genderchoice" name="genderchoice" data-error="Error msg here">
+                   <p>
+                   <label>
+                   <input class="with-gap" name="genderchoice" type="radio" value = "Male"/>
+                   <span>Male</span>
+                   </label>
+                   </p>
+                   <p>
+                   <label>
+                   <input class="with-gap" name="genderchoice" type="radio" value = "Female"/>
+                   <span>Female</span>
+                   </label>
+                   </div>
+                   <label for="gender">Gender</label>
+                 </div><br><br><!--Close form field-->
+               
+                 <a class='dropdown-trigger btn' href='#' data-target='category' class="validate" required = "">Select Topic Category</a>
+                 
+                 <div class="form-field">
+                 <!-- Dropdown Structure -->
+                 <ul id='category' class='dropdown-content'>
+                 <? categories.forEach(function(category){ ?>
+                 <?console.log( category )?>
+                 <li><a href="#!" onclick = "setCat(<?= category ?>)"><?= category ?></a></li>
+                  <li class="divider" tabindex="-1"></li>
+                 <?})?>
+                 </ul><br>
+                 
+                 <div class="form-field" id= "dispCat">  
+
+                 </div><!--Close form field-->
+                 
+                 </div><br><!--Close form field-->
+                 
+                 <div class="form-field">  
+                   <textarea id="problemExplained" class="materialize-textarea" data-length="2500"  class="validate" required = "" style="height: 200px;"></textarea>
+                   <label for="problemExplained">What is the problem you are facing?</label>
+                 </div><br><br><!--Close form field-->
+                 
+                 
+                 <div class="form-field"> 
+                 <div class= checkbox-grid id= "topics" name="topics">
+                     <? topics.forEach(function(topic){ ?>
+                     <?console.log( topic )?>
+                     <p>
+                     <label>
+                     <input type="checkbox" class="filled-in" value = "<?= topic ?>"/>
+                     <span><?= topic ?></span>
+                     </label>
+                     </p>
+                     <?})?>
+                   </div>
+                   <label for="topicsSelection">Topics</label>
+                   </div><br><br><!--Close form field-->
+                 
+               
+                 <div class="form-field">  
+                   <button  id = submitButton class="btn waves-effect waves-light" style= "width: 100%;" type="submit" name="action" onclick= "submitClicked()" >Send!</button>
+                 </div><br><br><!--Close form field-->
+               
+               </div><!--Close card content-->
+             
+             </div>-<!--Close class card-->    
+          </div>-<!--Close row, mainCol-->  
+       </div><!--Close row, mainRow-->
+
+     </div> <!--Close Main container-->
+     
+  <div id="overlay"><!--Open Loader-->
+      <div class="loader"></div>
+  </div><!--Close Loader-->
+         
+  </body>
+   <?!= sitePagesManager.include("application-js"); ?><!--the "!" to evalute or execute the html, not treat it as just string-->
+</html>

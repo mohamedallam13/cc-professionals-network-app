@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<script>
+//Documentation:
+//https://rudmanmrrod.github.io/material-dialog/#install
+!function(t){t.Package?MaterialDialog={}:t.MaterialDialog={}}(window),MaterialDialog.templates={alert:"<div class='modal material-alert'><div class='modal-content'><h4 class='modal-title'></h4></div><div class='modal-footer'><div></div>",dialog:"<div class='modal material-dialog class_here'><div class='modal-content'><h4 class='modal-title'>title_here</h4></div><div class='modal-footer'><button class='btn modal-close close close_button_class'>close_button_text</button>&nbsp;<button class='btn modal-close confirm confirm_button_class'>confirm_button_text</button><div></div>"},MaterialDialog.alert=function(t,e){t=void 0!==t?t:"";var o='<button class="btn modal-close button_class close">button_text</button>',l=null,a=e=void 0!==e?e:{};void 0!==e.buttons?void 0!==e.buttons.close&&(o=void 0!==e.buttons.close.text?o.replace("button_text",e.buttons.close.text):o.replace("button_text","Close"),o=void 0!==e.buttons.close.className?o.replace("button_class",e.buttons.close.className):o.replace("button_class",""),void 0!==e.buttons.close.modalClose&&(o=0==e.buttons.close.modalClose?o.replace("modal-close",""):o),void 0!==e.buttons.close.callback&&(l=e.buttons.close.callback)):o=(o=o.replace("button_text","Close")).replace("button_class",""),e={title:void 0!==e.title?e.title:"Alert",footer:void 0!==e.footer?e.footer:"",button:o},document.getElementsByTagName("body")[0].insertAdjacentHTML("beforeend",this.templates.alert);var s=document.getElementsByClassName("material-alert")[document.getElementsByClassName("material-alert").length-1];(s.getElementsByClassName("modal-title")[0].textContent=e.title,s.getElementsByClassName("modal-content")[0].insertAdjacentHTML("beforeend",t),s.getElementsByClassName("modal-footer")[0].insertAdjacentHTML("beforeend",e.footer),s.getElementsByClassName("modal-footer")[0].insertAdjacentHTML("beforeend",e.button),M.Modal.init(s,a).open(),l)&&s.getElementsByClassName("close")[0].addEventListener("click",function(){l.call()})},MaterialDialog.replace_close_button=function(t){return t=(t=t.replace("close_button_text","Close")).replace("close_button_class","red")},MaterialDialog.replace_confirm_button=function(t){return t=(t=t.replace("confirm_button_text","Confirm")).replace("confirm_button_class","")},MaterialDialog.dialog=function(t,e){t=void 0!==t?t:"";var o=null,l=null,a=e=void 0!==e?e:{},s=this.templates.dialog;s=void 0!==e.title?s.replace("title_here",e.title):s.replace("title_here","Dialog"),s=void 0!==e.modalType?s.replace("class_here",e.modalType):s.replace("class_here",""),void 0!==e.buttons?(void 0!==e.buttons.close?(s=void 0!==e.buttons.close.text?s.replace("close_button_text",e.buttons.close.text):s.replace("close_button_text","Close"),s=void 0!==e.buttons.close.className?s.replace("close_button_class",e.buttons.close.className):s.replace("close_button_class",""),void 0!==e.buttons.close.modalClose&&(s=0==e.buttons.close.modalClose?s.replace("modal-close close","close"):s),void 0!==e.buttons.close.callback&&(o=e.buttons.close.callback)):s=this.replace_close_button(s),void 0!==e.buttons.confirm?(s=void 0!==e.buttons.confirm.text?s.replace("confirm_button_text",e.buttons.confirm.text):s.replace("confirm_button_text","Confirm"),s=void 0!==e.buttons.confirm.className?s.replace("confirm_button_class",e.buttons.confirm.className):s.replace("confirm_button_class",""),void 0!==e.buttons.confirm.modalClose&&(s=0==e.buttons.confirm.modalClose?s.replace("modal-close confirm","confirm"):s),void 0!==e.buttons.confirm.callback&&(l=e.buttons.confirm.callback)):s=this.replace_confirm_button(s)):(s=this.replace_close_button(s),s=this.replace_confirm_button(s)),document.getElementsByTagName("body")[0].insertAdjacentHTML("beforeend",s);var n=document.getElementsByClassName("material-dialog")[document.getElementsByClassName("material-dialog").length-1];(n.getElementsByClassName("modal-content")[0].insertAdjacentHTML("beforeend",t),M.Modal.init(n,a).open(),o)&&n.getElementsByClassName("close")[0].addEventListener("click",function(){o.call()});l&&n.getElementsByClassName("confirm")[0].addEventListener("click",function(){l.call()})};
+
+
+var ids = {
+selectedProfessional: 'Please select a professional',
+requesterEmail: 'Please leave a conatct Email',
+age: 'Please fill in your age',
+genderchoice: 'Please select a gender',
+category: 'Please select a category',
+problemExplained: 'Please write a few sentences about your problem',
+topics: 'Please check at least one topic'
+}
+
+var category = '';
+
+function setCat(cat){
+var content = '<p class="selectedCat">' + cat + '</p><label for="category">Category</label><br><br>';
+document.getElementById("dispCat").innerHTML = content;
+category = cat;
+}
+
+var disclaimer;
+
+M.updateTextFields();
+
+document.addEventListener('DOMContentLoaded', function() {
+var elems,instances
+
+elems = document.querySelectorAll('select');
+instances = M.FormSelect.init(elems);
+
+elems = document.querySelectorAll('.dropdown-trigger');
+instances = M.Dropdown.init(elems);
+
+elems = document.querySelectorAll('.collapsible');
+instances = M.Collapsible.init(elems);
+
+elems = document.querySelectorAll('select');
+instances = M.FormSelect.init(elems); 
+
+M.updateTextFields();
+
+});
+
+window.onload = load;
+
+function load(){
+google.script.run.withSuccessHandler(setpopUpsObj).getPopups();
+}
+
+function setpopUpsObj(popUpsObjStr){
+var combinedObj = JSON.parse(popUpsObjStr);
+disclaimer = combinedObj.disclaimer;
+showPage();
+}
+  
+
+function submitClicked(){
+
+var failedValidations = checkValidations();
+
+if(!failedValidations){
+
+MaterialDialog.dialog(
+	disclaimer,
+	{
+		title:"Disclaimer",
+		modalType:"modal-fixed-footer", // Can be empty, modal-fixed-footer or bottom-sheet
+		buttons:{
+			// Use by default close and confirm buttons
+//			close:{
+//				className:"red",
+//				text:"Disagree",
+//				callback:function(){
+//					console.log("closed!");
+//				}
+//			},
+			confirm:{
+				className:"blue",
+				text:"Agree & Submit",
+//				modalClose:false,
+				callback:function(){
+//					console.log("confirmed");
+                    submitForm()
+				}
+			}
+		}
+	}
+)
+
+}else{
+
+warnFailedValidations(failedValidations)
+
+}
+
+}
+
+function checkValidations(){
+var failedValidations = [];
+var isValid
+Object.keys(ids).forEach(function(id){
+var element = document.getElementById(id);
+//console.log(element);
+var value = element.value;
+if(id == 'genderchoice'){
+isValid = getChecked(".with-gap");
+}else if(id == 'topics'){
+var array = getChecked(".filled-in");
+isValid = array? true : false;
+console.log(array);
+console.log(isValid);
+}else if(id == 'category'){
+isValid = category != ''? true : false;
+value = category;
+}else{
+var isValid = element.checkValidity();
+value = isValid;
+}
+if(!isValid || value == ''){
+failedValidations.push(id);
+}
+})
+if(failedValidations.length == 0){
+return;
+}
+return failedValidations;
+}
+
+function getChecked(cls){
+var element = document.querySelectorAll(cls);
+var checked = [];
+for (var i = 0, length = element.length; i < length; i++) {
+  if (element[i].checked) {
+    checked.push(element[i].value);
+  }
+}
+if(checked.length < 1){
+return null;
+}
+return checked;
+}
+
+function warnFailedValidations(failedValidations){
+var message = '';
+failedValidations.forEach(function(id){
+message += ids[id]
+message += '<br>'
+})
+M.toast({html: message})
+
+}
+
+function submitForm(){
+showBoth();
+disableButton();
+var request = {};
+Object.keys(ids).forEach(function(id){
+var element = document.getElementById(id);
+var value;
+if(id == 'genderchoice'){
+value = getChecked(".with-gap")[0];
+}else if(id == 'topics'){
+value = getChecked(".filled-in")
+console.log(value);
+value = value.join(",");
+console.log(value);
+}else if(id == 'category'){
+value = category
+}else{
+value = element.value;
+}
+request[id] = value;
+})
+console.log(request);
+google.script.run.withSuccessHandler(requestSuccess).receiveRequest(request);
+}
+
+
+function requestSuccess(confirm){
+if(confirm){
+M.toast({html: 'submitted!'});
+MaterialDialog.dialog(
+	"Your request has been received by our system and has been forwarded to the professional. Please follow the instructions in the email you will receive.<br>You will be now redirected back to the professionals page!",
+	{
+		title:"Received!",
+		modalType:"modal-fixed-footer", // Can be empty, modal-fixed-footer or bottom-sheet
+        			confirm:{
+				className:"blue",
+				text:"Okay",
+//				modalClose:false,
+				callback:function(){
+					console.log("confirmed");
+				}
+			}
+	}
+)
+var intervalID = window.setInterval(sendToMainPage, 3000);
+
+function sendToMainPage(){
+window.clearInterval(intervalID);
+window.location.href = "https://script.google.com/macros/s/AKfycbxzRRqTYXsMFH8oVk4C2Syag-ULhQyq2PMZ20pJXve-e0fr4k7f/exec";
+}
+
+}
+}
+
+function disableButton(){
+var button = document.getElementById('submitButton');
+button.setAttribute('class', 'btn waves-effect waves-light disabled');
+}
+
+
+function loadingFunction(){
+showBoth();
+}
+
+function showLoader(){
+show('main', false);
+show('overlay', true);
+}
+
+function showPage(){
+show('main', true);
+show('overlay', false);
+}
+
+function showBoth(){
+show('main', true);
+show('overlay', true);
+}
+
+function show(id, value) {
+document.getElementById(id).style.display = value ? 'block' : 'none';
+}
+
+</script>
