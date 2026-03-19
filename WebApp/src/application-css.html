@@ -1,81 +1,363 @@
-<!DOCTYPE html>
 <style>
-.fixed {
-  [type="checkbox"], [type="radio"] {
-    + label {   
-      pointer-events: auto;
-    }
-  }
+/* =========================================================
+   APPLICATION PAGE — inherits design tokens from index-css
+   (index-css is NOT included here; these are form-specific styles
+   that supplement the shared variables defined when application-css
+   is loaded alongside the global :root definition below)
+   ========================================================= */
+
+/* Duplicate tokens so application page is self-contained */
+:root {
+  --bg:           #0d0f14;
+  --bg-surface:   #141720;
+  --bg-card:      rgba(255,255,255,0.04);
+  --border:       rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.18);
+  --accent:       #6c63ff;
+  --accent-soft:  rgba(108,99,255,0.15);
+  --accent-glow:  rgba(108,99,255,0.35);
+  --teal:         #00cba9;
+  --teal-soft:    rgba(0,203,169,0.12);
+  --text-primary: #e8eaf0;
+  --text-secondary:#8b92a5;
+  --text-muted:   #555c72;
+  --danger:       #ff5c6a;
+  --success:      #2ed47a;
+  --radius-sm:    8px;
+  --radius-md:    14px;
+  --radius-lg:    20px;
+  --shadow-card:  0 4px 24px rgba(0,0,0,0.35);
+  --font:         'Inter', system-ui, sans-serif;
+  --transition:   0.22s ease;
 }
 
-.input-field {
-  [type="checkbox"] + label,
-  [type="radio"]:not(:checked) + label,
-  [type="radio"]:checked + label {
-    pointer-events: auto;
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
-    .loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 120px;
-  height: 120px;
-  animation: spin 2s linear infinite;
+/* ---- Header (shared) ---- */
+.site-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(13,15,20,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 24px;
+  height: 60px; display: flex; align-items: center; justify-content: space-between;
+}
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-name { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; color: var(--text-primary); }
+.brand-badge {
+  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--accent); background: var(--accent-soft); border: 1px solid var(--accent);
+  border-radius: 4px; padding: 1px 6px;
+}
+.join-link {
+  font-size: 13px; font-weight: 500; color: var(--teal);
+  border: 1px solid var(--teal); border-radius: var(--radius-sm); padding: 6px 14px;
+  text-decoration: none; transition: background var(--transition);
+}
+.join-link:hover { background: var(--teal-soft); }
+
+/* ---- Page layout ---- */
+.form-page-wrapper {
+  max-width: 680px;
+  margin: 40px auto;
+  padding: 0 24px 60px;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* ---- Form card ---- */
+.form-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 
-.loader {
-position: relative;
-border: 16px solid #f3f3f3;
-border-radius: 50%;
-border-top: 16px solid #3498db;
-width: 70px;
-height: 70px;
-left:50%;
-top:50%;
--webkit-animation: spin 2s linear infinite; /* Safari */
-animation: spin 2s linear infinite;
-}
-#overlay{
-position: absolute;
-top:0px;
-left:0px;
-width: 100%;
-height: 100%;
-background: black;
-opacity: .5;
-}
-.container{
-position:relative;
-height: 300px;
-width: 200px;
-border:1px solid
+.form-card-header {
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--border);
 }
 
+.form-card-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.form-card-sub {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.form-card-body {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ---- Field groups ---- */
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.field-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.field-input,
+.field-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 15px;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  resize: vertical;
+}
+.field-input::placeholder,
+.field-textarea::placeholder { color: var(--text-muted); }
+.field-input:focus,
+.field-textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+/* ---- Select ---- */
+.select-wrap { position: relative; }
+.field-select {
+  width: 100%;
+  padding: 12px 40px 12px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font);
+  font-size: 15px;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+.field-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+.select-arrow {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  color: var(--text-muted); pointer-events: none; font-size: 12px;
+}
+
+/* ---- Dividers ---- */
+.field-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0;
+}
+.field-divider::before,
+.field-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.field-divider span {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+/* ---- Radio buttons ---- */
+.radio-group { display: flex; flex-wrap: wrap; gap: 10px; }
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  transition: all var(--transition);
+}
+.radio-label:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+.radio-label input { accent-color: var(--accent); }
+
+/* ---- Category pills ---- */
+.category-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.cat-pill {
+  font-size: 13px;
+  font-weight: 500;
+  padding: 7px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-family: var(--font);
+  transition: all var(--transition);
+}
+.cat-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+.cat-pill.active {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.field-selected-cat {
+  font-size: 13px;
+  color: var(--teal);
+  font-weight: 500;
+  min-height: 20px;
+}
+
+/* ---- Checkboxes ---- */
 .checkbox-grid {
-    columns: 4 8em;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 8px;
 }
-.selectedCat{
-    color: #00897b;
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px 0;
+}
+.checkbox-label input { accent-color: var(--accent); width: 16px; height: 16px; }
+
+/* ---- Submit button ---- */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: #fff;
+  font-family: var(--font);
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+.btn-submit:hover {
+  background: #574fd6;
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+.btn-submit:disabled,
+.btn-submit.disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
+/* ---- Modal (shared) ---- */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px;
+}
+.modal-backdrop.open { display: flex; }
+.modal-box {
+  background: #1a1d27; border: 1px solid var(--border);
+  border-radius: var(--radius-lg); max-width: 520px; width: 100%;
+  max-height: 80vh; overflow-y: auto; padding: 28px;
+  box-shadow: 0 16px 60px rgba(0,0,0,0.6);
+}
+.modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.modal-title { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+.modal-close { background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 20px; line-height: 1; padding: 4px; transition: color var(--transition); }
+.modal-close:hover { color: var(--text-primary); }
+.modal-body { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
+.modal-body p { margin-bottom: 8px; }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+.btn-primary { padding: 10px 20px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; border: none; background: var(--accent); color: #fff; transition: background var(--transition); }
+.btn-primary:hover { background: #574fd6; }
+.btn-secondary { padding: 10px 20px; border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); transition: all var(--transition); }
+.btn-secondary:hover { border-color: var(--border-hover); color: var(--text-primary); }
 
-/* Safari */
-@-webkit-keyframes spin {
-0% { -webkit-transform: rotate(0deg); }
-100% { -webkit-transform: rotate(360deg); }
+/* ---- Loading overlay ---- */
+#overlay {
+  position: fixed; inset: 0; background: var(--bg); z-index: 999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+}
+.spinner { width: 52px; height: 52px; }
+.spinner-ring {
+  width: 52px; height: 52px;
+  border: 3px solid var(--border); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.9s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner-label { font-size: 14px; color: var(--text-muted); letter-spacing: 0.3px; }
+
+/* ---- Toast ---- */
+.toast-container {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 500;
+}
+.toast {
+  background: #1a1d27; border: 1px solid var(--border);
+  color: var(--text-primary); font-size: 14px;
+  padding: 10px 20px; border-radius: 100px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  animation: fadeUp 0.3s ease forwards;
+}
+.toast.error { border-color: var(--danger); color: var(--danger); }
+.toast.success { border-color: var(--success); color: var(--success); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes spin {
-0% { transform: rotate(0deg); }
-100% { transform: rotate(360deg); }
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .form-page-wrapper { padding: 0 16px 40px; margin: 20px auto; }
+  .form-card-header  { padding: 20px 20px 16px; }
+  .form-card-body    { padding: 20px; }
+  .header-inner      { padding: 0 16px; }
+  .join-link         { font-size: 12px; padding: 5px 10px; }
+  .checkbox-grid     { grid-template-columns: 1fr 1fr; }
 }
-
 </style>
-

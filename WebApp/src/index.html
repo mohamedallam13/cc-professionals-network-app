@@ -1,60 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
     <base target="_self">
-    
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-     <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-
-    <!-- Compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-    
-    <!--Let browser know website is optimized for mobile-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="description" content="CC Professionals Network — Find trusted mental health professionals in your community.">
+    <title>Professionals Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <?!= sitePagesManager.include("index-css"); ?>
   <body>
-       <div id="header"> <!--Open container-->
-       <div class="row">
-       <nav class="teal">
-       <div class="nav-wrapper">
-       <a href="https://forms.gle/GVpagEUhExszytoC6" class="brand-logo center"><font size="2"><b>JOIN US? CLICK HERE!</b></font></a>
-       </div>
-       </nav>
-       </div>
-     </div> <!--Close container-->
-     
-     <div id="header"> <!--Open container-->
-       <div class="row">
-       <nav class="black">
-       <div class="nav-wrapper">
-       <a href="https://forms.gle/GVpagEUhExszytoC6" class="brand-logo center"><font size="6"><b>Professionals Network </b></font><font size="2">(beta)</font></a>
-       </div>
-       </nav>
-       </div>
-     </div> <!--Close container-->
-     
-     <div id="main"> <!--Open container-->
-       
-       <div id="MOBView"><!--Open MOB Div-->
-       <?!= cardsJoinedMOB ?>
-       </div><!--Close MOB Div-->
-       
-       <div id="PCView"><!--Open PC Div-->
-       <?!= cardsJoinedPC ?><!--Close PC Div-->
-       </div>
-       
-     </div> <!--Close container-->
-     
-     <div id="overlay"><!--Open Loader-->
-       <div class="loader"></div>
-      </div><!--Close Loader-->
-         
+
+    <!-- NAV -->
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="brand">
+          <span class="brand-name">Professionals Network</span>
+          <span class="brand-badge">beta</span>
+        </div>
+        <a class="join-link" href="https://forms.gle/GVpagEUhExszytoC6" target="_top">
+          Join as a Professional &rarr;
+        </a>
+      </div>
+    </header>
+
+    <!-- HERO / SEARCH -->
+    <section class="hero">
+      <h1 class="hero-title">Find trusted mental health professionals</h1>
+      <p class="hero-sub">Browse verified practitioners in your community — filter by specialty, location, and more.</p>
+      <div class="search-bar">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search by name, title, or topic…" autocomplete="off" />
+      </div>
+    </section>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar" id="filterBar">
+      <span class="filter-label">Filter:</span>
+      <div class="filter-chips" id="filterChips">
+        <!-- chips injected by JS from card data-topics -->
+      </div>
+      <button class="filter-clear" id="filterClear" style="display:none">Clear filters</button>
+    </div>
+
+    <!-- RESULTS META -->
+    <div class="results-meta" id="resultsMeta"></div>
+
+    <!-- CARD GRID -->
+    <main id="main" style="display:none">
+      <div class="card-grid" id="cardGrid">
+        <div id="PCView" class="grid-inner"><?!= cardsJoinedPC ?></div>
+        <div id="MOBView" class="grid-inner"><?!= cardsJoinedMOB ?></div>
+      </div>
+      <p class="no-results" id="noResults" style="display:none">No professionals match your search.</p>
+    </main>
+
+    <!-- LOADING OVERLAY -->
+    <div id="overlay">
+      <div class="spinner">
+        <div class="spinner-ring"></div>
+      </div>
+      <p class="spinner-label">Loading professionals…</p>
+    </div>
+
   </body>
-   <?!= sitePagesManager.include("index-js"); ?><!--the "!" to evalute or execute the html, not treat it as just string-->
+  <?!= sitePagesManager.include("index-js"); ?>
 </html>

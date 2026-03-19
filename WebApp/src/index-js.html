@@ -1,131 +1,250 @@
-<!DOCTYPE html>
 <script>
-!function(t){t.Package?MaterialDialog={}:t.MaterialDialog={}}(window),MaterialDialog.templates={alert:"<div class='modal material-alert'><div class='modal-content'><h4 class='modal-title'></h4></div><div class='modal-footer'><div></div>",dialog:"<div class='modal material-dialog class_here'><div class='modal-content'><h4 class='modal-title'>title_here</h4></div><div class='modal-footer'><button class='btn modal-close close close_button_class'>close_button_text</button>&nbsp;<button class='btn modal-close confirm confirm_button_class'>confirm_button_text</button><div></div>"},MaterialDialog.alert=function(t,e){t=void 0!==t?t:"";var o='<button class="btn modal-close button_class close">button_text</button>',l=null,a=e=void 0!==e?e:{};void 0!==e.buttons?void 0!==e.buttons.close&&(o=void 0!==e.buttons.close.text?o.replace("button_text",e.buttons.close.text):o.replace("button_text","Close"),o=void 0!==e.buttons.close.className?o.replace("button_class",e.buttons.close.className):o.replace("button_class",""),void 0!==e.buttons.close.modalClose&&(o=0==e.buttons.close.modalClose?o.replace("modal-close",""):o),void 0!==e.buttons.close.callback&&(l=e.buttons.close.callback)):o=(o=o.replace("button_text","Close")).replace("button_class",""),e={title:void 0!==e.title?e.title:"Alert",footer:void 0!==e.footer?e.footer:"",button:o},document.getElementsByTagName("body")[0].insertAdjacentHTML("beforeend",this.templates.alert);var s=document.getElementsByClassName("material-alert")[document.getElementsByClassName("material-alert").length-1];(s.getElementsByClassName("modal-title")[0].textContent=e.title,s.getElementsByClassName("modal-content")[0].insertAdjacentHTML("beforeend",t),s.getElementsByClassName("modal-footer")[0].insertAdjacentHTML("beforeend",e.footer),s.getElementsByClassName("modal-footer")[0].insertAdjacentHTML("beforeend",e.button),M.Modal.init(s,a).open(),l)&&s.getElementsByClassName("close")[0].addEventListener("click",function(){l.call()})},MaterialDialog.replace_close_button=function(t){return t=(t=t.replace("close_button_text","Close")).replace("close_button_class","red")},MaterialDialog.replace_confirm_button=function(t){return t=(t=t.replace("confirm_button_text","Confirm")).replace("confirm_button_class","")},MaterialDialog.dialog=function(t,e){t=void 0!==t?t:"";var o=null,l=null,a=e=void 0!==e?e:{},s=this.templates.dialog;s=void 0!==e.title?s.replace("title_here",e.title):s.replace("title_here","Dialog"),s=void 0!==e.modalType?s.replace("class_here",e.modalType):s.replace("class_here",""),void 0!==e.buttons?(void 0!==e.buttons.close?(s=void 0!==e.buttons.close.text?s.replace("close_button_text",e.buttons.close.text):s.replace("close_button_text","Close"),s=void 0!==e.buttons.close.className?s.replace("close_button_class",e.buttons.close.className):s.replace("close_button_class",""),void 0!==e.buttons.close.modalClose&&(s=0==e.buttons.close.modalClose?s.replace("modal-close close","close"):s),void 0!==e.buttons.close.callback&&(o=e.buttons.close.callback)):s=this.replace_close_button(s),void 0!==e.buttons.confirm?(s=void 0!==e.buttons.confirm.text?s.replace("confirm_button_text",e.buttons.confirm.text):s.replace("confirm_button_text","Confirm"),s=void 0!==e.buttons.confirm.className?s.replace("confirm_button_class",e.buttons.confirm.className):s.replace("confirm_button_class",""),void 0!==e.buttons.confirm.modalClose&&(s=0==e.buttons.confirm.modalClose?s.replace("modal-close confirm","confirm"):s),void 0!==e.buttons.confirm.callback&&(l=e.buttons.confirm.callback)):s=this.replace_confirm_button(s)):(s=this.replace_close_button(s),s=this.replace_confirm_button(s)),document.getElementsByTagName("body")[0].insertAdjacentHTML("beforeend",s);var n=document.getElementsByClassName("material-dialog")[document.getElementsByClassName("material-dialog").length-1];(n.getElementsByClassName("modal-content")[0].insertAdjacentHTML("beforeend",t),M.Modal.init(n,a).open(),o)&&n.getElementsByClassName("close")[0].addEventListener("click",function(){o.call()});l&&n.getElementsByClassName("confirm")[0].addEventListener("click",function(){l.call()})};
+// =========================================================
+//  STATE
+// =========================================================
+var popupsObj = {};
+var activeSearch = '';
+var activeTopics = [];
 
-var popupsObj
-var device
+// =========================================================
+//  BOOTSTRAP
+// =========================================================
+window.onload = function () {
+  detectDevice();
+  google.script.run
+    .withSuccessHandler(onPopupsLoaded)
+    .withFailureHandler(onScriptError)
+    .getPopups();
+};
 
-//var welcomeNote
-
-  document.addEventListener('DOMContentLoaded', function() {
-    var elems = document.querySelectorAll('select');
-    var instances = M.FormSelect.init(elems);
-  });
-  
-  
-  window.onload = load;
-  
-  function load(){
-  google.script.run.withSuccessHandler(setpopUpsObj).getPopups();
-  var PCView = document.getElementById('PCView');
-  var MOBView = document.getElementById('MOBView');
+function detectDevice() {
   var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-//  console.log(isMobile)
+  var pcView  = document.getElementById('PCView');
+  var mobView = document.getElementById('MOBView');
+
   if (isMobile) {
-  PCView.innerHTML = '';
-  device = 'Mobile';
+    if (pcView)  pcView.innerHTML  = '';
   } else {
-  MOBView.innerHTML = '';
-  device = 'PC';
+    if (mobView) mobView.innerHTML = '';
   }
-  var event = {};
-  event.device = device;
-//  console.log(event);
-  google.script.run.addToLog(event);
-  }
-  
-  function setpopUpsObj(popUpsObjStr){
-//  console.log(popUpsObjStr);
-  var combinedObj = JSON.parse(popUpsObjStr);
-  popupsObj = combinedObj.popupsObj;
-  var welcomeNote = combinedObj.welcomeNote;
-//  console.log(combinedObj);
+
+  google.script.run.addToLog({ device: isMobile ? 'Mobile' : 'PC' });
+}
+
+// =========================================================
+//  POPUPS / WELCOME
+// =========================================================
+function onPopupsLoaded(combinedObjStr) {
+  var combinedObj = JSON.parse(combinedObjStr);
+  popupsObj = combinedObj.popupsObj || {};
   showPage();
-//  console.log(welcomeNote);
-  launchWelcomeNote(welcomeNote);
+  buildFilterChips();
+  updateResultsMeta();
+  showWelcomeModal(combinedObj.welcomeNote);
+}
+
+function showWelcomeModal(note) {
+  if (!note) return;
+  openModal('welcomeModal', note, 'Welcome!');
+}
+
+// =========================================================
+//  SEARCH & FILTER
+// =========================================================
+document.addEventListener('DOMContentLoaded', function () {
+  var searchInput = document.getElementById('searchInput');
+  if (searchInput) {
+    searchInput.addEventListener('input', function () {
+      activeSearch = this.value.toLowerCase().trim();
+      applyFilters();
+    });
   }
-  
-  function launchWelcomeNote(welcomeNote){
-//  console.log(welcomeNote)
-  MaterialDialog.dialog(
-	welcomeNote,
-	{
-		title:"Welcome!",
-		modalType:"modal-fixed-footer", // Can be empty, modal-fixed-footer or bottom-sheet
-		buttons:{
-			// Use by default close and confirm buttons
-//			close:{
-//				className:"red",
-//				text:"Close",
-//				callback:function(){
-//					console.log("closed!");
-//				}
-//			},
-			contact:{
-				className:"blue",
-				text:"Okay",
-//				modalClose:false,
-				callback:function(){
-//					console.log("confirmed");
-				}
-			}
-		}
-	}
-  )
 
-}
- 
- function moreInfo(name){
+  var filterClear = document.getElementById('filterClear');
+  if (filterClear) {
+    filterClear.addEventListener('click', clearFilters);
+  }
+});
 
-  MaterialDialog.dialog(
-	popupsObj[name],
-	{
-		title:"Info",
-		modalType:"modal-fixed-footer", // Can be empty, modal-fixed-footer or bottom-sheet
-		buttons:{
-			// Use by default close and confirm buttons
-			close:{
-				className:"red",
-				text:"Close",
-				callback:function(){
-//					console.log("closed!");
-				}
-			},
-			contact:{
-				className:"blue",
-				text:"Contact",
-//				modalClose:false,
-				callback:function(){
-//					console.log("confirmed");
-				}
-			}
-		}
-	}
-  )
+function buildFilterChips() {
+  var container = document.getElementById('filterChips');
+  if (!container) return;
 
+  var cards = getVisibleGrid().querySelectorAll('.pro-card');
+  var topicSet = {};
+
+  cards.forEach(function (card) {
+    var raw = card.getAttribute('data-topics') || '';
+    raw.split(',').forEach(function (t) {
+      var trimmed = t.trim();
+      if (trimmed) topicSet[trimmed] = true;
+    });
+  });
+
+  Object.keys(topicSet).sort().forEach(function (topic) {
+    var btn = document.createElement('button');
+    btn.className = 'chip';
+    btn.textContent = topic;
+    btn.addEventListener('click', function () { toggleTopic(topic, btn); });
+    container.appendChild(btn);
+  });
 }
 
-function loadingFunction(){
-showBoth();
+function toggleTopic(topic, btn) {
+  var idx = activeTopics.indexOf(topic);
+  if (idx === -1) {
+    activeTopics.push(topic);
+    btn.classList.add('active');
+  } else {
+    activeTopics.splice(idx, 1);
+    btn.classList.remove('active');
+  }
+  updateClearButton();
+  applyFilters();
 }
 
-function showLoader(){
-show('main', false);
-show('overlay', true);
+function clearFilters() {
+  activeSearch = '';
+  activeTopics = [];
+
+  var searchInput = document.getElementById('searchInput');
+  if (searchInput) searchInput.value = '';
+
+  document.querySelectorAll('.chip').forEach(function (c) { c.classList.remove('active'); });
+  updateClearButton();
+  applyFilters();
 }
 
-function showPage(){
-show('main', true);
-show('overlay', false);
+function updateClearButton() {
+  var btn = document.getElementById('filterClear');
+  if (!btn) return;
+  btn.style.display = (activeSearch || activeTopics.length) ? '' : 'none';
 }
 
-function showBoth(){
-show('main', true);
-show('overlay', true);
+function applyFilters() {
+  var grid = getVisibleGrid();
+  if (!grid) return;
+  var cards = grid.querySelectorAll('.pro-card');
+  var visible = 0;
+
+  cards.forEach(function (card) {
+    var matchesSearch = !activeSearch ||
+      (card.getAttribute('data-name')   || '').toLowerCase().includes(activeSearch) ||
+      (card.getAttribute('data-title')  || '').toLowerCase().includes(activeSearch) ||
+      (card.getAttribute('data-topics') || '').toLowerCase().includes(activeSearch);
+
+    var matchesTopic = activeTopics.length === 0 || activeTopics.some(function (t) {
+      return (card.getAttribute('data-topics') || '').toLowerCase().includes(t.toLowerCase());
+    });
+
+    if (matchesSearch && matchesTopic) {
+      card.classList.remove('hidden');
+      visible++;
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+
+  var noResults = document.getElementById('noResults');
+  if (noResults) noResults.style.display = visible === 0 ? '' : 'none';
+
+  updateResultsMeta(visible, cards.length);
+}
+
+function updateResultsMeta(visible, total) {
+  var meta = document.getElementById('resultsMeta');
+  if (!meta) return;
+  if (visible === undefined) {
+    var grid = getVisibleGrid();
+    if (!grid) return;
+    total   = grid.querySelectorAll('.pro-card').length;
+    visible = grid.querySelectorAll('.pro-card:not(.hidden)').length;
+  }
+  meta.textContent = visible + ' of ' + total + ' professionals';
+}
+
+function getVisibleGrid() {
+  var pc  = document.getElementById('PCView');
+  var mob = document.getElementById('MOBView');
+  if (pc  && pc.innerHTML.trim()  !== '') return pc;
+  if (mob && mob.innerHTML.trim() !== '') return mob;
+  return null;
+}
+
+// =========================================================
+//  MORE INFO MODAL
+// =========================================================
+function moreInfo(name) {
+  var content = popupsObj[name] || '<p>No additional information available.</p>';
+  openModal('infoModal', content, name);
+}
+
+// =========================================================
+//  GENERIC MODAL
+// =========================================================
+function openModal(id, bodyHtml, title) {
+  var backdrop = document.getElementById(id);
+  if (!backdrop) {
+    backdrop = createModalElement(id);
+    document.body.appendChild(backdrop);
+  }
+  backdrop.querySelector('.modal-title').textContent = title || '';
+  backdrop.querySelector('.modal-body').innerHTML    = bodyHtml || '';
+  backdrop.classList.add('open');
+}
+
+function closeModal(id) {
+  var backdrop = document.getElementById(id);
+  if (backdrop) backdrop.classList.remove('open');
+}
+
+function createModalElement(id) {
+  var backdrop = document.createElement('div');
+  backdrop.id = id;
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML =
+    '<div class="modal-box">' +
+      '<div class="modal-header">' +
+        '<span class="modal-title"></span>' +
+        '<button class="modal-close" onclick="closeModal(\'' + id + '\')">&times;</button>' +
+      '</div>' +
+      '<div class="modal-body"></div>' +
+      '<div class="modal-footer">' +
+        '<button class="btn-primary" onclick="closeModal(\'' + id + '\')">Got it</button>' +
+      '</div>' +
+    '</div>';
+
+  backdrop.addEventListener('click', function (e) {
+    if (e.target === backdrop) closeModal(id);
+  });
+
+  return backdrop;
+}
+
+// =========================================================
+//  VISIBILITY HELPERS
+// =========================================================
+function loadingFunction() { showBoth(); }
+
+function showPage() {
+  show('main',    true);
+  show('overlay', false);
+}
+
+function showBoth() {
+  show('main',    true);
+  show('overlay', true);
 }
 
 function show(id, value) {
-document.getElementById(id).style.display = value ? 'block' : 'none';
+  var el = document.getElementById(id);
+  if (el) el.style.display = value ? '' : 'none';
 }
 
+// =========================================================
+//  ERROR HANDLER
+// =========================================================
+function onScriptError(err) {
+  showPage();
+}
 </script>
