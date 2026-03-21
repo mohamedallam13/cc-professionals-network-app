@@ -1,0 +1,14 @@
+{
+  "name": "WebApp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "login": "clasp_config_auth=./.clasprc.json clasp login --creds ./credentials.json",
+    "push": "clasp_config_auth=./.clasprc.json clasp push",
+    "push:force": "clasp_config_auth=./.clasprc.json clasp push --force"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
